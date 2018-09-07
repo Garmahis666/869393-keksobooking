@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Дмитрий Харо](https://up.htmlacademy.ru/javascript/15/user/869393).
-* Наставник: `Неизвестно`.
+* Наставник: Олег Петров
 
 ---
 
