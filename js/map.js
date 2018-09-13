@@ -67,7 +67,7 @@ var createPhoto = function (src) {
   newPhoto.height = 40;
   newPhoto.alt = 'Фотография жилья';
   return newPhoto;
-}
+};
 
 var createCard = function (pin) {
   var map = document.querySelector('.map');
