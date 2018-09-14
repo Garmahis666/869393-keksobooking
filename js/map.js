@@ -1,10 +1,18 @@
 'use strict';
 
-var COUNT_OF_JS_OBJECTS = 8;
+var OFFERS_AMOUN = 8;
+var AVATARS_COUNT = 8;
+
+var generateAvatars = function () {
+  var avatars = [];
+  for (var i = 1; i <= AVATARS_COUNT; i++) {
+    avatars.push('img/avatars/user0' + i + '.png');
+  }
+  return avatars;
+};
 
 var randomSettings = {
-  AVATARS: ['img/avatars/user01.png', 'img/avatars/user02.png', 'img/avatars/user03.png', 'img/avatars/user04.png',
-    'img/avatars/user05.png', 'img/avatars/user06.png', 'img/avatars/user07.png', 'img/avatars/user08.png'],
+  AVATARS: generateAvatars(),
   TITLES: ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец',
     'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик',
     'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'],
@@ -28,6 +36,14 @@ var randomSettings = {
 
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+var map = document.querySelector('.map');
+var filter = document.querySelector('.map__filters-container');
+
+var randomSort = function (arrayToSort) {
+  return arrayToSort.sort(function () {
+    return 0.5 - Math.random();
+  });
+};
 
 var createPin = function (pin) {
   var newPin = pinTemplate.cloneNode(true);
@@ -49,21 +65,8 @@ var typeOfHousing = {
   }
 };
 
-var featuresClasses = {
-  wifi: 'popup__feature--wifi',
-  dishwasher: 'popup__feature--dishwasher',
-  parking: 'popup__feature--parking',
-  washer: 'popup__feature--washer',
-  elevator: 'popup__feature--elevator',
-  conditioner: 'popup__feature--conditioner',
-  getClass: function (className) {
-    for (var key in featuresClasses) {
-      if (featuresClasses[key] === className) {
-        return key;
-      }
-    }
-    return '';
-  }
+var getFeatureFromClass = function (classText) {
+  return classText.split('--')[1];
 };
 
 var createPhoto = function (src) {
@@ -77,8 +80,6 @@ var createPhoto = function (src) {
 };
 
 var createCard = function (pin) {
-  var map = document.querySelector('.map');
-  var filter = document.querySelector('.map__filters-container');
   var newCard = cardTemplate.cloneNode(true);
   newCard.querySelector('.popup__avatar').src = pin.author.avatar;
   newCard.querySelector('.popup__title').textContent = pin.offer.title;
@@ -92,7 +93,7 @@ var createCard = function (pin) {
   var fetuareChild = features.querySelectorAll('.popup__feature');
   for (i = 0; i < fetuareChild.length; i++) {
     var featureName = fetuareChild[i].classList[1];
-    if (pin.offer.features.indexOf(featuresClasses.getClass(featureName)) === -1) {
+    if (pin.offer.features.indexOf(getFeatureFromClass(featureName)) === -1) {
       features.removeChild(fetuareChild[i]);
     }
   }
@@ -103,7 +104,7 @@ var createCard = function (pin) {
   map.insertBefore(newCard, filter);
 };
 
-var createPins = function (pins) {
+var createFragmentPins = function (pins) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < pins.length; i++) {
     var newPin = createPin(pins[i]);
@@ -126,9 +127,7 @@ var generatePin = function (mapWidth) {
   var x = Math.floor(Math.random() * mapWidth);
   var y = Math.floor((Math.random() * (randomSettings.MAX_Y - randomSettings.MIN_Y)) + randomSettings.MIN_Y);
   var featuresCount = Math.floor(Math.random() * randomSettings.FEATURES.length - 1);
-  var features = randomSettings.FEATURES.sort(function () {
-    return 0.5 - Math.random();
-  }).slice(featuresCount);
+  var features = randomSort(randomSettings.FEATURES).slice(featuresCount);
   var pin = {
     author: {
       avatar: getRandomValue(randomSettings.AVATARS)
@@ -144,9 +143,7 @@ var generatePin = function (mapWidth) {
       checkout: getRandomValue(randomSettings.CHECKOUTS),
       features: features,
       description: '',
-      photos: randomSettings.PHOTOS.sort(function () {
-        return 0.5 - Math.random();
-      })
+      photos: randomSort(randomSettings.PHOTOS)
     },
     location: {
       x: x,
@@ -156,9 +153,9 @@ var generatePin = function (mapWidth) {
   return pin;
 };
 
-var generatePinsJs = function (mapWidth) {
+var generatePinsObjects = function (mapWidth) {
   var pins = [];
-  for (var i = 0; i < COUNT_OF_JS_OBJECTS; i++) {
+  for (var i = 0; i < OFFERS_AMOUN; i++) {
     pins.push(generatePin(mapWidth));
   }
   return pins;
@@ -166,8 +163,8 @@ var generatePinsJs = function (mapWidth) {
 
 var prepareMap = function () {
   var mapPins = document.querySelector('.map__pins');
-  var jsPins = generatePinsJs(mapPins.offsetWidth);
-  var pins = createPins(jsPins);
+  var pinsObject = generatePinsObjects(mapPins.offsetWidth);
+  var pins = createFragmentPins(pinsObject);
   mapPins.appendChild(pins);
   eraseTagsClasses();
 };
