@@ -30,7 +30,7 @@ var map = document.querySelector('.map');
 var filter = document.querySelector('.map__filters-container');
 
 var getAvatar = function (count) {
-  var pictureNumber = count < 10 ? '0' + count : count
+  var pictureNumber = count < 10 ? '0' + count : count;
   return ('img/avatars/user' + pictureNumber + '.png');
 };
 
