@@ -1,18 +1,9 @@
 'use strict';
 
-var OFFERS_AMOUN = 8;
+var OFFERS_AMOUNT = 8;
 var AVATARS_COUNT = 8;
 
-var generateAvatars = function () {
-  var avatars = [];
-  for (var i = 1; i <= AVATARS_COUNT; i++) {
-    avatars.push('img/avatars/user0' + i + '.png');
-  }
-  return avatars;
-};
-
 var randomSettings = {
-  AVATARS: generateAvatars(),
   TITLES: ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец',
     'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик',
     'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'],
@@ -39,10 +30,16 @@ var cardTemplate = document.querySelector('#card').content.querySelector('.map__
 var map = document.querySelector('.map');
 var filter = document.querySelector('.map__filters-container');
 
+var generateAvatar = function () {
+  return ('img/avatars/user0' + Math.floor((Math.random() * AVATARS_COUNT - 1) + 1) + '.png');
+};
+
+var getRandom = function () {
+  return 0.5 - Math.random();
+};
+
 var randomSort = function (arrayToSort) {
-  return arrayToSort.sort(function () {
-    return 0.5 - Math.random();
-  });
+  return arrayToSort.sort(getRandom);
 };
 
 var createPin = function (pin) {
@@ -130,7 +127,7 @@ var generatePin = function (mapWidth) {
   var features = randomSort(randomSettings.FEATURES).slice(featuresCount);
   var pin = {
     author: {
-      avatar: getRandomValue(randomSettings.AVATARS)
+      avatar: generateAvatar()
     },
     offer: {
       title: getRandomValue(randomSettings.TITLES),
@@ -155,7 +152,7 @@ var generatePin = function (mapWidth) {
 
 var generatePinsObjects = function (mapWidth) {
   var pins = [];
-  for (var i = 0; i < OFFERS_AMOUN; i++) {
+  for (var i = 0; i < OFFERS_AMOUNT; i++) {
     pins.push(generatePin(mapWidth));
   }
   return pins;
