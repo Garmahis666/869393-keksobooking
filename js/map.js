@@ -30,7 +30,8 @@ var map = document.querySelector('.map');
 var filter = document.querySelector('.map__filters-container');
 
 var getAvatar = function (count) {
-  return ('img/avatars/user0' + count + '.png');
+  var pictureNumber = count < 10 ? '0' + count : count
+  return ('img/avatars/user' + pictureNumber + '.png');
 };
 
 var getRandom = function () {
@@ -151,8 +152,8 @@ var generatePin = function (mapWidth, count) {
 
 var getPinsObjects = function (mapWidth) {
   var pins = [];
-  for (var i = 0; i < OFFERS_AMOUNT; i++) {
-    pins.push(generatePin(mapWidth, i + 1));
+  for (var i = 1; i <= OFFERS_AMOUNT; i++) {
+    pins.push(generatePin(mapWidth, i));
   }
   return pins;
 };
