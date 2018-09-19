@@ -24,10 +24,27 @@ var randomSettings = {
   PICTURE_HEIGHT: 40
 };
 
+var typeOfHousing = {
+  flat: 'Квартира',
+  bungalo: 'Бунгало',
+  house: 'Дом',
+  palace: 'Дворец',
+  getType: function (name) {
+    return this[name];
+  }
+};
+
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 var map = document.querySelector('.map');
+var mapPins = document.querySelector('.map__pins');
 var filter = document.querySelector('.map__filters-container');
+var mapPinMain = document.querySelector('.map__pin--main');
+
+var onMapPinMainMouseUpActivate = function (evt) {
+  activateMap();
+  mapPinMain.removeEventListener('mouseup', onMapPinMainMouseUpActivate);
+};
 
 var getAvatar = function (count) {
   var pictureNumber = count < 10 ? '0' + count : count;
@@ -49,17 +66,14 @@ var createPin = function (pin) {
   var pinImg = newPin.querySelector('img');
   pinImg.src = pin.author.avatar;
   pinImg.alt = pin.offer.title;
+  newPin.addEventListener('click', function () {
+    var card = document.querySelector('.map__card');
+    if (card) {
+      card.remove();
+    }
+    createCard(pin);
+  });
   return newPin;
-};
-
-var typeOfHousing = {
-  flat: 'Квартира',
-  bungalo: 'Бунгало',
-  house: 'Дом',
-  palace: 'Дворец',
-  getType: function (name) {
-    return this[name];
-  }
 };
 
 var getFeatureFromClass = function (classText) {
@@ -86,12 +100,16 @@ var createCard = function (pin) {
   newCard.querySelector('.popup__text--capacity').textContent = pin.offer.rooms + ' комнаты для ' + pin.offer.guests + ' гостей';
   newCard.querySelector('.popup__text--time').textContent = 'Заезд после ' + pin.offer.checkin + ', выезд до ' + pin.offer.checkout;
   newCard.querySelector('.popup__description').textContent = pin.offer.description;
+  var closeCard = newCard.querySelector('.popup__close');
+  closeCard.addEventListener('click', function () {
+    newCard.remove();
+  });
   var features = newCard.querySelector('.popup__features');
-  var fetuareChild = features.querySelectorAll('.popup__feature');
-  for (i = 0; i < fetuareChild.length; i++) {
-    var featureName = fetuareChild[i].classList[1];
+  var featureChild = features.querySelectorAll('.popup__feature');
+  for (i = 0; i < featureChild.length; i++) {
+    var featureName = featureChild[i].classList[1];
     if (pin.offer.features.indexOf(getFeatureFromClass(featureName)) === -1) {
-      features.removeChild(fetuareChild[i]);
+      features.removeChild(featureChild[i]);
     }
   }
   var popupPhoto = newCard.querySelector('.popup__photos');
@@ -106,7 +124,6 @@ var createFragmentPins = function (pins) {
   for (var i = 0; i < pins.length; i++) {
     var newPin = createPin(pins[i]);
     fragment.appendChild(newPin);
-    createCard(pins[i]);
   }
   return fragment;
 };
@@ -158,12 +175,15 @@ var getPinsObjects = function (mapWidth) {
   return pins;
 };
 
-var prepareMap = function () {
-  var mapPins = document.querySelector('.map__pins');
+var activateMap = function () {
   var pinsObject = getPinsObjects(mapPins.offsetWidth);
   var pins = createFragmentPins(pinsObject);
   mapPins.appendChild(pins);
   eraseTagsClasses();
+};
+
+var prepareMap = function () {
+  mapPinMain.addEventListener('mouseup', onMapPinMainMouseUpActivate);
 };
 
 prepareMap();
