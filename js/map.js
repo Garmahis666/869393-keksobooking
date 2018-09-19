@@ -27,7 +27,13 @@ var randomSettings = {
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 var map = document.querySelector('.map');
+var mapPins = document.querySelector('.map__pins');
 var filter = document.querySelector('.map__filters-container');
+var mapPinMain = document.querySelector('.map__pin--main');
+
+var onMapPinMainMouseUp = function (evt) {
+  activateMap();
+};
 
 var getAvatar = function (count) {
   var pictureNumber = count < 10 ? '0' + count : count;
@@ -158,12 +164,15 @@ var getPinsObjects = function (mapWidth) {
   return pins;
 };
 
-var prepareMap = function () {
-  var mapPins = document.querySelector('.map__pins');
+var activateMap = function () {
   var pinsObject = getPinsObjects(mapPins.offsetWidth);
   var pins = createFragmentPins(pinsObject);
   mapPins.appendChild(pins);
   eraseTagsClasses();
+};
+
+var prepareMap = function () {
+  mapPinMain.addEventListener('mouseup', onMapPinMainMouseUp);
 };
 
 prepareMap();
