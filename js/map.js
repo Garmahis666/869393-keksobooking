@@ -180,10 +180,30 @@ var activateMap = function () {
   var pins = createFragmentPins(pinsObject);
   mapPins.appendChild(pins);
   eraseTagsClasses();
+  enableForms();
+};
+
+var disabledForms = function () {
+  var adForm = document.querySelector('.ad-form');
+  adForm.classList.add('ad-form--disabled');
+  var elements = adForm.querySelectorAll('fieldset');
+  for (var i = 0; i < elements.length; i++) {
+    elements[i].setAttribute('disabled', 'disabled');
+  }
+};
+
+var enableForms = function () {
+  var adForm = document.querySelector('.ad-form');
+  adForm.classList.remove('ad-form--disabled');
+  var elements = adForm.querySelectorAll('fieldset');
+  for (var i = 0; i < elements.length; i++) {
+    elements[i].removeAttribute('disabled');
+  }
 };
 
 var prepareMap = function () {
   mapPinMain.addEventListener('mouseup', onMapPinMainMouseUpActivate);
+  disabledForms();
 };
 
 prepareMap();
