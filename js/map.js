@@ -41,7 +41,7 @@ var mapPins = document.querySelector('.map__pins');
 var filter = document.querySelector('.map__filters-container');
 var mapPinMain = document.querySelector('.map__pin--main');
 
-var onMapPinMainMouseUpActivate = function (evt) {
+var onMapPinMainMouseUpActivate = function () {
   activateMap();
   mapPinMain.removeEventListener('mouseup', onMapPinMainMouseUpActivate);
 };
