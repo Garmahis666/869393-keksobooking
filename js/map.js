@@ -24,6 +24,11 @@ var randomSettings = {
   PICTURE_HEIGHT: 40
 };
 
+var styleClasses = {
+  PIN_ACTIVE: 'map__pin--active',
+  FROM_DISABLE: 'ad-form--disabled'
+};
+
 var typeOfHousing = {
   flat: 'Квартира',
   bungalo: 'Бунгало',
@@ -40,6 +45,7 @@ var mapPinMain = document.querySelector('.map__pin--main');
 var activeCard = document.querySelector('.map__card');
 var adForm = document.querySelector('.ad-form');
 var adFormElements = adForm.querySelectorAll('fieldset');
+var activePin;
 
 var onMapPinMainMouseUpActivate = function () {
   activateMap();
@@ -59,6 +65,12 @@ var randomSort = function (arrayToSort) {
   return arrayToSort.sort(getRandom);
 };
 
+var togglePinActive = function () {
+  if (activePin) {
+    activePin.classList.toggle(styleClasses.PIN_ACTIVE);
+  }
+};
+
 var createPin = function (pin) {
   var newPin = pinTemplate.cloneNode(true);
   newPin.style.left = pin.location.x - Math.round(randomSettings.PIN_WIDTH / 2) + 'px';
@@ -69,12 +81,11 @@ var createPin = function (pin) {
   newPin.addEventListener('click', function () {
     if (activeCard) {
       activeCard.remove();
-      if (mapPins.querySelector('.map__pin--active')) {
-        mapPins.querySelector('.map__pin--active').classList.remove('map__pin--active');
-      }
+      togglePinActive();
     }
-    newPin.classList.add('map__pin--active');
+    newPin.classList.add(styleClasses.PIN_ACTIVE);
     createCard(pin);
+    activePin = newPin;
   });
   return newPin;
 };
@@ -105,9 +116,8 @@ var createCard = function (pin) {
   newCard.querySelector('.popup__description').textContent = pin.offer.description;
   var closedCard = newCard.querySelector('.popup__close');
   closedCard.addEventListener('click', function () {
-    if (mapPins.querySelector('.map__pin--active')) {
-      mapPins.querySelector('.map__pin--active').classList.remove('map__pin--active');
-    }
+    togglePinActive();
+    activePin = null;
     newCard.remove();
   });
   var features = newCard.querySelector('.popup__features');
@@ -190,15 +200,15 @@ var activateMap = function () {
   enableForms();
 };
 
-var disabledForms = function () {
-  adForm.classList.add('ad-form--disabled');
+var disableForms = function () {
+  adForm.classList.add(styleClasses.FROM_DISABLE);
   for (var i = 0; i < adFormElements.length; i++) {
     adFormElements[i].setAttribute('disabled', 'disabled');
   }
 };
 
 var enableForms = function () {
-  adForm.classList.remove('ad-form--disabled');
+  adForm.classList.remove(styleClasses.FROM_DISABLE);
   for (var i = 0; i < adFormElements.length; i++) {
     adFormElements[i].removeAttribute('disabled');
   }
@@ -206,7 +216,7 @@ var enableForms = function () {
 
 var prepareMap = function () {
   mapPinMain.addEventListener('mouseup', onMapPinMainMouseUpActivate);
-  disabledForms();
+  disableForms();
 };
 
 prepareMap();
