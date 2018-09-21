@@ -28,10 +28,7 @@ var typeOfHousing = {
   flat: 'Квартира',
   bungalo: 'Бунгало',
   house: 'Дом',
-  palace: 'Дворец',
-  getType: function (name) {
-    return this[name];
-  }
+  palace: 'Дворец'
 };
 
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -40,6 +37,9 @@ var map = document.querySelector('.map');
 var mapPins = document.querySelector('.map__pins');
 var filter = document.querySelector('.map__filters-container');
 var mapPinMain = document.querySelector('.map__pin--main');
+var activeCard = document.querySelector('.map__card');
+var adForm = document.querySelector('.ad-form');
+var adFormElements = adForm.querySelectorAll('fieldset');
 
 var onMapPinMainMouseUpActivate = function () {
   activateMap();
@@ -62,15 +62,18 @@ var randomSort = function (arrayToSort) {
 var createPin = function (pin) {
   var newPin = pinTemplate.cloneNode(true);
   newPin.style.left = pin.location.x - Math.round(randomSettings.PIN_WIDTH / 2) + 'px';
-  newPin.style.top = pin.location.y + randomSettings.PIN_HEIGHT + 'px';
+  newPin.style.top = pin.location.y - randomSettings.PIN_HEIGHT + 'px';
   var pinImg = newPin.querySelector('img');
   pinImg.src = pin.author.avatar;
   pinImg.alt = pin.offer.title;
   newPin.addEventListener('click', function () {
-    var card = document.querySelector('.map__card');
-    if (card) {
-      card.remove();
+    if (activeCard) {
+      activeCard.remove();
+      if (mapPins.querySelector('.map__pin--active')) {
+        mapPins.querySelector('.map__pin--active').classList.remove('map__pin--active');
+      }
     }
+    newPin.classList.add('map__pin--active');
     createCard(pin);
   });
   return newPin;
@@ -96,12 +99,15 @@ var createCard = function (pin) {
   newCard.querySelector('.popup__title').textContent = pin.offer.title;
   newCard.querySelector('.popup__text--address').textContent = pin.offer.address;
   newCard.querySelector('.popup__text--price').textContent = pin.offer.price + '₽/ночь';
-  newCard.querySelector('.popup__type').textContent = typeOfHousing.getType(pin.offer.type);
+  newCard.querySelector('.popup__type').textContent = typeOfHousing[pin.offer.type];
   newCard.querySelector('.popup__text--capacity').textContent = pin.offer.rooms + ' комнаты для ' + pin.offer.guests + ' гостей';
   newCard.querySelector('.popup__text--time').textContent = 'Заезд после ' + pin.offer.checkin + ', выезд до ' + pin.offer.checkout;
   newCard.querySelector('.popup__description').textContent = pin.offer.description;
-  var closeCard = newCard.querySelector('.popup__close');
-  closeCard.addEventListener('click', function () {
+  var closedCard = newCard.querySelector('.popup__close');
+  closedCard.addEventListener('click', function () {
+    if (mapPins.querySelector('.map__pin--active')) {
+      mapPins.querySelector('.map__pin--active').classList.remove('map__pin--active');
+    }
     newCard.remove();
   });
   var features = newCard.querySelector('.popup__features');
@@ -116,6 +122,7 @@ var createCard = function (pin) {
   for (var i = 0; i < pin.offer.photos.length; i++) {
     popupPhoto.appendChild(createPhoto(pin.offer.photos[i]));
   }
+  activeCard = newCard;
   map.insertBefore(newCard, filter);
 };
 
@@ -184,20 +191,16 @@ var activateMap = function () {
 };
 
 var disabledForms = function () {
-  var adForm = document.querySelector('.ad-form');
   adForm.classList.add('ad-form--disabled');
-  var elements = adForm.querySelectorAll('fieldset');
-  for (var i = 0; i < elements.length; i++) {
-    elements[i].setAttribute('disabled', 'disabled');
+  for (var i = 0; i < adFormElements.length; i++) {
+    adFormElements[i].setAttribute('disabled', 'disabled');
   }
 };
 
 var enableForms = function () {
-  var adForm = document.querySelector('.ad-form');
   adForm.classList.remove('ad-form--disabled');
-  var elements = adForm.querySelectorAll('fieldset');
-  for (var i = 0; i < elements.length; i++) {
-    elements[i].removeAttribute('disabled');
+  for (var i = 0; i < adFormElements.length; i++) {
+    adFormElements[i].removeAttribute('disabled');
   }
 };
 
