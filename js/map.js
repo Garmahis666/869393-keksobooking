@@ -52,6 +52,7 @@ var costOfHousing = document.querySelector('#price');
 var onMapPinMainMouseUpActivate = function () {
   activateMap();
   mapPinMain.removeEventListener('mouseup', onMapPinMainMouseUpActivate);
+  typeOfHousing.addEventListener('change', setMinPrice);
 };
 
 var setMinPrice = function () {
