@@ -29,11 +29,11 @@ var styleClasses = {
   FROM_DISABLE: 'ad-form--disabled'
 };
 
-var typeOfHousing = {
-  flat: 'Квартира',
-  bungalo: 'Бунгало',
-  house: 'Дом',
-  palace: 'Дворец'
+var typesOfHousing = {
+  flat: ['Квартира', 1000],
+  bungalo: ['Бунгало', 0],
+  house: ['Дом', 5000],
+  palace: ['Дворец', 10000]
 };
 
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -46,10 +46,17 @@ var activeCard = document.querySelector('.map__card');
 var adForm = document.querySelector('.ad-form');
 var adFormElements = adForm.querySelectorAll('fieldset');
 var activePin;
+var typeOfHousing = document.querySelector('#type');
+var costOfHousing = document.querySelector('#price');
 
 var onMapPinMainMouseUpActivate = function () {
   activateMap();
   mapPinMain.removeEventListener('mouseup', onMapPinMainMouseUpActivate);
+  typeOfHousing.addEventListener('change', setMinPrice);
+};
+
+var setMinPrice = function () {
+  costOfHousing.min = typesOfHousing[typeOfHousing.value][1];
 };
 
 var getAvatar = function (count) {
@@ -110,7 +117,7 @@ var createCard = function (pin) {
   newCard.querySelector('.popup__title').textContent = pin.offer.title;
   newCard.querySelector('.popup__text--address').textContent = pin.offer.address;
   newCard.querySelector('.popup__text--price').textContent = pin.offer.price + '₽/ночь';
-  newCard.querySelector('.popup__type').textContent = typeOfHousing[pin.offer.type];
+  newCard.querySelector('.popup__type').textContent = typesOfHousing[pin.offer.type][0];
   newCard.querySelector('.popup__text--capacity').textContent = pin.offer.rooms + ' комнаты для ' + pin.offer.guests + ' гостей';
   newCard.querySelector('.popup__text--time').textContent = 'Заезд после ' + pin.offer.checkin + ', выезд до ' + pin.offer.checkout;
   newCard.querySelector('.popup__description').textContent = pin.offer.description;
