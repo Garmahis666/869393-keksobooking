@@ -36,6 +36,13 @@ var typesOfHousing = {
   palace: {name: 'Дворец', minCost: 10000}
 };
 
+var roomsCapacity = {
+  '1': ['1'],
+  '2': ['1', '2'],
+  '3': ['1', '2', '3'],
+  '100': ['0']
+};
+
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 var map = document.querySelector('.map');
@@ -76,26 +83,14 @@ var roomNumberChange = function () {
   var capacityOptions = capacity.querySelectorAll('option');
   var notChange = false;
   for (var i = 0; i < capacityOptions.length; i++) {
-    if (roomNumber.value <= 3) {
-      if (capacityOptions[i].value <= roomNumber.value && capacityOptions[i].value > 0) {
-        capacityOptions[i].removeAttribute('disabled');
-        if (!notChange) {
-          capacity.value = capacityOptions[i].value;
-          notChange = true;
-        }
-      } else {
-        capacityOptions[i].setAttribute('disabled', 'disabled');
+    if (roomsCapacity[roomNumber.value].indexOf(capacityOptions[i].value) > -1) {
+      capacityOptions[i].removeAttribute('disabled');
+      if (!notChange) {
+        capacity.value = capacityOptions[i].value;
+        notChange = true;
       }
     } else {
-      if (capacityOptions[i].value === '0') {
-        capacityOptions[i].removeAttribute('disabled');
-        if (!notChange) {
-          capacity.value = capacityOptions[i].value;
-          notChange = true;
-        }
-      } else {
-        capacityOptions[i].setAttribute('disabled', 'disabled');
-      }
+      capacityOptions[i].setAttribute('disabled', 'disabled');
     }
   }
 };
