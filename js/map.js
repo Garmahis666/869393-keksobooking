@@ -81,18 +81,10 @@ var onTimeoutChange = function () {
 
 var roomNumberChange = function () {
   var capacityOptions = capacity.querySelectorAll('option');
-  var notChange = false;
   for (var i = 0; i < capacityOptions.length; i++) {
-    if (roomsCapacity[roomNumber.value].indexOf(capacityOptions[i].value) > -1) {
-      capacityOptions[i].removeAttribute('disabled');
-      if (!notChange) {
-        capacity.value = capacityOptions[i].value;
-        notChange = true;
-      }
-    } else {
-      capacityOptions[i].setAttribute('disabled', 'disabled');
-    }
+    capacityOptions[i].disabled = roomsCapacity[roomNumber.value].indexOf(capacityOptions[i].value) === -1;
   }
+  capacity.value = roomsCapacity[roomNumber.value][0];
 };
 
 var onRoomNumberChange = function () {
