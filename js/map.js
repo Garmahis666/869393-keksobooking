@@ -43,6 +43,13 @@ var roomsCapacity = {
   '100': ['0']
 };
 
+var startCoords = {
+  x: 0,
+  xStart: 0,
+  y: 0,
+  yStart: 0
+};
+
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 var map = document.querySelector('.map');
@@ -61,14 +68,72 @@ var capacity = document.querySelector('#capacity');
 var timein = document.querySelector('#timein');
 var timeout = document.querySelector('#timeout');
 
-var onMapPinMainMouseUpActivate = function () {
+var rangeOfCoords = {
+  minX: 0,
+  maxX: mapPins.offsetWidth - randomSettings.PIN_WIDTH,
+  minY: 130,
+  maxY: 630
+};
+
+var calculateAdress = function () {
+  var x = parseInt(mapPinMain.style.left.split('px')[0], 0) + Math.round(randomSettings.PIN_WIDTH / 2);
+  var y = parseInt(mapPinMain.style.top.split('px')[0], 0) + randomSettings.PIN_HEIGHT;
+  return x + ', ' + y;
+};
+
+var onMapPinMainMouseUpActivate = function (evt) {
+  evt.preventDefault();
   activateMap();
-  mapPinMain.removeEventListener('mouseup', onMapPinMainMouseUpActivate);
+  document.removeEventListener('mouseup', onMapPinMainMouseUpActivate);
+  document.removeEventListener('mousemove', onMapPinMainMouseMove);
   typeOfHousing.addEventListener('change', setMinPrice);
   roomNumber.addEventListener('change', onRoomNumberChange);
   timein.addEventListener('change', onTimeinChange);
   timeout.addEventListener('change', onTimeoutChange);
-  address.value = mapPinMain.style.left.split('px')[0] + ', ' + mapPinMain.style.top.split('px')[0];
+  address.value = calculateAdress();
+};
+
+var onMapPinMainMouseDown = function (evt) {
+  evt.preventDefault();
+  startCoords.x = evt.clientX;
+  startCoords.y = evt.clientY;
+  if (!(startCoords.xStart + startCoords.yStart)) {
+    startCoords.xStart = mapPinMain.style.left;
+    startCoords.yStart = mapPinMain.style.top;
+  }
+  document.addEventListener('mousemove', onMapPinMainMouseMove);
+  document.addEventListener('mouseup', onMapPinMainMouseUpActivate);
+  mapPinMain.removeEventListener('mousedown', onMapPinMainMouseDown);
+};
+
+var checkCoords = function (x, y) {
+  if (x < rangeOfCoords.minX) {
+    x = rangeOfCoords.minX;
+  }
+  if (y < rangeOfCoords.minY) {
+    y = rangeOfCoords.minY;
+  }
+  if (x > rangeOfCoords.maxX) {
+    x = rangeOfCoords.maxX;
+  }
+  if (y > rangeOfCoords.maxY) {
+    y = rangeOfCoords.maxY;
+  }
+  return [x, y];
+};
+
+var onMapPinMainMouseMove = function (evt) {
+  evt.preventDefault();
+  var shift = {
+    x: startCoords.x - evt.clientX,
+    y: startCoords.y - evt.clientY
+  };
+  startCoords.x = evt.clientX;
+  startCoords.y = evt.clientY;
+  var newCoords = checkCoords(mapPinMain.offsetLeft - shift.x, mapPinMain.offsetTop - shift.y);
+  mapPinMain.style.top = newCoords[1] + 'px';
+  mapPinMain.style.left = newCoords[0] + 'px';
+  address.value = calculateAdress();
 };
 
 var onTimeinChange = function () {
@@ -260,7 +325,7 @@ var enableForms = function () {
 };
 
 var prepareMap = function () {
-  mapPinMain.addEventListener('mouseup', onMapPinMainMouseUpActivate);
+  mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown);
   disableForms();
 };
 
