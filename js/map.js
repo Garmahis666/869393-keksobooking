@@ -50,6 +50,8 @@ var startCoords = {
   yStart: 0
 };
 
+var activeMap = false;
+
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 var map = document.querySelector('.map');
@@ -71,8 +73,8 @@ var timeout = document.querySelector('#timeout');
 var rangeOfCoords = {
   minX: 0,
   maxX: mapPins.offsetWidth - randomSettings.PIN_WIDTH,
-  minY: 130,
-  maxY: 630
+  minY: 130 - randomSettings.PIN_HEIGHT,
+  maxY: 630 - randomSettings.PIN_HEIGHT
 };
 
 var calculateAdress = function () {
@@ -83,13 +85,16 @@ var calculateAdress = function () {
 
 var onMapPinMainMouseUpActivate = function (evt) {
   evt.preventDefault();
-  activateMap();
+  if (!activeMap) {
+    activateMap();
+    typeOfHousing.addEventListener('change', setMinPrice);
+    roomNumber.addEventListener('change', onRoomNumberChange);
+    timein.addEventListener('change', onTimeinChange);
+    timeout.addEventListener('change', onTimeoutChange);
+  }
   document.removeEventListener('mouseup', onMapPinMainMouseUpActivate);
   document.removeEventListener('mousemove', onMapPinMainMouseMove);
-  typeOfHousing.addEventListener('change', setMinPrice);
-  roomNumber.addEventListener('change', onRoomNumberChange);
-  timein.addEventListener('change', onTimeinChange);
-  timeout.addEventListener('change', onTimeoutChange);
+  mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown);
   address.value = calculateAdress();
 };
 
@@ -307,6 +312,7 @@ var activateMap = function () {
   eraseTagsClasses();
   enableForms();
   roomNumberChange();
+  activeMap = true;
 };
 
 var disableForms = function () {
