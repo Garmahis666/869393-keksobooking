@@ -20,6 +20,8 @@ var randomSettings = {
   MAX_Y: 630,
   PIN_WIDTH: 50,
   PIN_HEIGHT: 70,
+  MAIN_PIN_WIDTH: 65,
+  MAIN_PIN_HEIGHT: 87,
   PICTURE_WIDTH: 45,
   PICTURE_HEIGHT: 40
 };
@@ -72,14 +74,14 @@ var timeout = document.querySelector('#timeout');
 
 var rangeOfCoords = {
   minX: 0,
-  maxX: mapPins.offsetWidth - randomSettings.PIN_WIDTH,
-  minY: 130 - randomSettings.PIN_HEIGHT,
-  maxY: 630 - randomSettings.PIN_HEIGHT
+  maxX: mapPins.offsetWidth - randomSettings.MAIN_PIN_WIDTH,
+  minY: 130,
+  maxY: 630
 };
 
-var calculateAdress = function () {
-  var x = parseInt(mapPinMain.style.left.split('px')[0], 0) + Math.round(randomSettings.PIN_WIDTH / 2);
-  var y = parseInt(mapPinMain.style.top.split('px')[0], 0) + randomSettings.PIN_HEIGHT;
+var calculateAddress = function () {
+  var x = parseInt(mapPinMain.style.left.split('px')[0], 0) + Math.round(randomSettings.MAIN_PIN_WIDTH / 2);
+  var y = parseInt(mapPinMain.style.top.split('px')[0], 0) + randomSettings.MAIN_PIN_HEIGHT;
   return x + ', ' + y;
 };
 
@@ -95,7 +97,7 @@ var onMapPinMainMouseUpActivate = function (evt) {
   document.removeEventListener('mouseup', onMapPinMainMouseUpActivate);
   document.removeEventListener('mousemove', onMapPinMainMouseMove);
   mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown);
-  address.value = calculateAdress();
+  address.value = calculateAddress();
 };
 
 var onMapPinMainMouseDown = function (evt) {
@@ -138,7 +140,7 @@ var onMapPinMainMouseMove = function (evt) {
   var newCoords = checkCoords(mapPinMain.offsetLeft - shift.x, mapPinMain.offsetTop - shift.y);
   mapPinMain.style.top = newCoords[1] + 'px';
   mapPinMain.style.left = newCoords[0] + 'px';
-  address.value = calculateAdress();
+  address.value = calculateAddress();
 };
 
 var onTimeinChange = function () {
