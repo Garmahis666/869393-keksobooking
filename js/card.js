@@ -2,7 +2,7 @@
 
 (function () {
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
-  window.activeCard = document.querySelector('.map__card');
+  var activeCard = document.querySelector('.map__card');
   var filter = document.querySelector('.map__filters-container');
   var map = document.querySelector('.map');
   var typesOfHousing = {
@@ -17,7 +17,7 @@
     PICTURE_HEIGHT: 40
   };
 
-  window.createCard = function (pin) {
+  var createCard = function (pin) {
     var newCard = cardTemplate.cloneNode(true);
     newCard.querySelector('.popup__avatar').src = pin.author.avatar;
     newCard.querySelector('.popup__title').textContent = pin.offer.title;
@@ -29,15 +29,14 @@
     newCard.querySelector('.popup__description').textContent = pin.offer.description;
     var closedCard = newCard.querySelector('.popup__close');
     closedCard.addEventListener('click', function () {
-      window.togglePinActive();
-      window.activePin = null;
+      window.pin.deactivatePin();
       newCard.remove();
     });
     var features = newCard.querySelector('.popup__features');
     var featureChild = features.querySelectorAll('.popup__feature');
     for (i = 0; i < featureChild.length; i++) {
       var featureName = featureChild[i].classList[1];
-      if (pin.offer.features.indexOf(window.getFeatureFromClass(featureName)) === -1) {
+      if (pin.offer.features.indexOf(window.utils.getFeatureFromClass(featureName)) === -1) {
         features.removeChild(featureChild[i]);
       }
     }
@@ -45,7 +44,7 @@
     for (var i = 0; i < pin.offer.photos.length; i++) {
       popupPhoto.appendChild(createPhoto(pin.offer.photos[i]));
     }
-    window.activeCard = newCard;
+    activeCard = newCard;
     map.insertBefore(newCard, filter);
   };
 
@@ -57,5 +56,14 @@
     newPhoto.height = randomSettings.PICTURE_HEIGHT;
     newPhoto.alt = 'Фотография жилья';
     return newPhoto;
+  };
+
+  window.card = {
+    showCard: function (pin) {
+      if (activeCard) {
+        activeCard.remove();
+      }
+      createCard(pin);
+    }
   };
 })();
