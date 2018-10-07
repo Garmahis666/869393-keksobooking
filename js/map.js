@@ -52,12 +52,12 @@
     evt.preventDefault();
     if (!activeMap) {
       activateMap();
-      window.activateForm();
+      window.form.activateForm();
     }
     document.removeEventListener('mouseup', onMapPinMainMouseUpActivate);
     document.removeEventListener('mousemove', onMapPinMainMouseMove);
     mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown);
-    window.setAddress(calculateAddress());
+    window.form.setAddress(calculateAddress());
   };
 
   var onMapPinMainMouseDown = function (evt) {
@@ -84,7 +84,7 @@
     var newCoords = checkCoords(mapPinMain.offsetLeft - shift.x, mapPinMain.offsetTop - shift.y);
     mapPinMain.style.top = newCoords[1] + 'px';
     mapPinMain.style.left = newCoords[0] + 'px';
-    window.setAddress(calculateAddress());
+    window.form.setAddress(calculateAddress());
   };
 
   var eraseTagsClasses = function () {
@@ -95,14 +95,14 @@
   var createFragmentPins = function (pins) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < pins.length; i++) {
-      var newPin = window.createPin(pins[i]);
+      var newPin = window.pin.createPin(pins[i]);
       fragment.appendChild(newPin);
     }
     return fragment;
   };
 
   var activateMap = function () {
-    var pinsObject = window.getPinsObjects(mapPins.offsetWidth);
+    var pinsObject = window.data.getPinsObjects(mapPins.offsetWidth);
     var pins = createFragmentPins(pinsObject);
     mapPins.appendChild(pins);
     eraseTagsClasses();
@@ -110,6 +110,6 @@
   };
 
   mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown);
-  window.disableForms();
+  window.form.disableForm();
 
 })();
