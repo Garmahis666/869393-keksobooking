@@ -14,23 +14,17 @@
     yStart: 0
   };
 
-  var typesOfHousing = {
-    flat: {name: 'Квартира', minCost: 1000},
-    bungalo: {name: 'Бунгало', minCost: 0},
-    house: {name: 'Дом', minCost: 5000},
-    palace: {name: 'Дворец', minCost: 10000}
-  };
-
   var activeMap = false;
 
   var mapPins = document.querySelector('.map__pins');
   var mapPinMain = document.querySelector('.map__pin--main');
-  var typeOfHousing = document.querySelector('#type');
-  var costOfHousing = document.querySelector('#price');
-  var roomNumber = document.querySelector('#room_number');
-  var timein = document.querySelector('#timein');
-  var timeout = document.querySelector('#timeout');
-  var address = document.querySelector('#address');
+
+  var rangeOfCoords = {
+    minX: 0,
+    maxX: mapPins.offsetWidth - randomSettings.MAIN_PIN_WIDTH,
+    minY: 130 - randomSettings.MAIN_PIN_HEIGHT,
+    maxY: 630 - randomSettings.MAIN_PIN_HEIGHT
+  };
 
   var calculateAddress = function () {
     var x = parseInt(mapPinMain.style.left.split('px')[0], 0) + Math.round(randomSettings.MAIN_PIN_WIDTH / 2);
@@ -38,19 +32,32 @@
     return x + ', ' + y;
   };
 
+  var checkCoords = function (x, y) {
+    if (x < rangeOfCoords.minX) {
+      x = rangeOfCoords.minX;
+    }
+    if (y < rangeOfCoords.minY) {
+      y = rangeOfCoords.minY;
+    }
+    if (x > rangeOfCoords.maxX) {
+      x = rangeOfCoords.maxX;
+    }
+    if (y > rangeOfCoords.maxY) {
+      y = rangeOfCoords.maxY;
+    }
+    return [x, y];
+  };
+
   var onMapPinMainMouseUpActivate = function (evt) {
     evt.preventDefault();
     if (!activeMap) {
       activateMap();
-      typeOfHousing.addEventListener('change', setMinPrice);
-      roomNumber.addEventListener('change', window.onRoomNumberChange);
-      timein.addEventListener('change', window.onTimeinChange);
-      timeout.addEventListener('change', window.onTimeoutChange);
+      window.activateForm();
     }
     document.removeEventListener('mouseup', onMapPinMainMouseUpActivate);
     document.removeEventListener('mousemove', onMapPinMainMouseMove);
     mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown);
-    address.value = calculateAddress();
+    window.setAddress(calculateAddress());
   };
 
   var onMapPinMainMouseDown = function (evt) {
@@ -74,14 +81,10 @@
     };
     startCoords.x = evt.clientX;
     startCoords.y = evt.clientY;
-    var newCoords = window.checkCoords(mapPinMain.offsetLeft - shift.x, mapPinMain.offsetTop - shift.y);
+    var newCoords = checkCoords(mapPinMain.offsetLeft - shift.x, mapPinMain.offsetTop - shift.y);
     mapPinMain.style.top = newCoords[1] + 'px';
     mapPinMain.style.left = newCoords[0] + 'px';
-    address.value = calculateAddress();
-  };
-
-  var setMinPrice = function () {
-    costOfHousing.min = typesOfHousing[typeOfHousing.value].minCost;
+    window.setAddress(calculateAddress());
   };
 
   var eraseTagsClasses = function () {
@@ -89,13 +92,20 @@
     element.classList.remove('map--faded');
   };
 
+  var createFragmentPins = function (pins) {
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < pins.length; i++) {
+      var newPin = window.createPin(pins[i]);
+      fragment.appendChild(newPin);
+    }
+    return fragment;
+  };
+
   var activateMap = function () {
     var pinsObject = window.getPinsObjects(mapPins.offsetWidth);
-    var pins = window.createFragmentPins(pinsObject);
+    var pins = createFragmentPins(pinsObject);
     mapPins.appendChild(pins);
     eraseTagsClasses();
-    window.enableForms();
-    window.roomNumberChange();
     activeMap = true;
   };
 
