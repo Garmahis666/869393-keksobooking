@@ -30,19 +30,15 @@
     FROM_DISABLE: 'ad-form--disabled'
   };
 
-  window.setAddress = function (addressText) {
-    address.value = addressText;
-  };
-
-  window.onTimeinChange = function () {
+  var onTimeinChange = function () {
     timeout.value = timein.value;
   };
 
-  window.onTimeoutChange = function () {
+  var onTimeoutChange = function () {
     timein.value = timeout.value;
   };
 
-  window.onRoomNumberChange = function () {
+  var onRoomNumberChange = function () {
     roomNumberChange();
   };
 
@@ -58,27 +54,35 @@
     capacity.value = roomsCapacity[roomNumber.value][0];
   };
 
-  window.disableForms = function () {
-    adForm.classList.add(styleClasses.FROM_DISABLE);
-    for (var i = 0; i < adFormElements.length; i++) {
-      adFormElements[i].setAttribute('disabled', 'disabled');
-    }
-  };
-
-  window.activateForm = function () {
-    enableForms();
-    roomNumberChange();
-    typeOfHousing.addEventListener('change', setMinPrice);
-    roomNumber.addEventListener('change', window.onRoomNumberChange);
-    timein.addEventListener('change', window.onTimeinChange);
-    timeout.addEventListener('change', window.onTimeoutChange);
-  };
-
   var enableForms = function () {
     adForm.classList.remove(styleClasses.FROM_DISABLE);
     for (var i = 0; i < adFormElements.length; i++) {
       adFormElements[i].removeAttribute('disabled');
     }
     address.setAttribute('disabled', 'disabled');
+  };
+
+  window.form = {
+    activateForm: function () {
+      enableForms();
+      roomNumberChange();
+      typeOfHousing.addEventListener('change', setMinPrice);
+      roomNumber.addEventListener('change', onRoomNumberChange);
+      timein.addEventListener('change', onTimeinChange);
+      timeout.addEventListener('change', onTimeoutChange);
+    },
+    disableForm: function () {
+      adForm.classList.add(styleClasses.FROM_DISABLE);
+      for (var i = 0; i < adFormElements.length; i++) {
+        adFormElements[i].setAttribute('disabled', 'disabled');
+      }
+      typeOfHousing.removeEventListener('change', setMinPrice);
+      roomNumber.removeEventListener('change', onRoomNumberChange);
+      timein.removeEventListener('change', onTimeinChange);
+      timeout.removeEventListener('change', onTimeoutChange);
+    },
+    setAddress: function (addressText) {
+      address.value = addressText;
+    }
   };
 })();
