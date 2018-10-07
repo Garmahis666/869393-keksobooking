@@ -14,28 +14,31 @@
     PIN_HEIGHT: 70
   };
 
-  window.togglePinActive = function () {
+  var togglePinActive = function () {
     if (activePin) {
       activePin.classList.toggle(styleClasses.PIN_ACTIVE);
+      activePin = null;
     }
   };
 
-  window.createPin = function (pin) {
-    var newPin = pinTemplate.cloneNode(true);
-    newPin.style.left = pin.location.x - Math.round(randomSettings.PIN_WIDTH / 2) + 'px';
-    newPin.style.top = pin.location.y - randomSettings.PIN_HEIGHT + 'px';
-    var pinImg = newPin.querySelector('img');
-    pinImg.src = pin.author.avatar;
-    pinImg.alt = pin.offer.title;
-    newPin.addEventListener('click', function () {
-      if (window.activeCard) {
-        window.activeCard.remove();
-        window.togglePinActive();
-      }
-      newPin.classList.add(styleClasses.PIN_ACTIVE);
-      window.createCard(pin);
-      activePin = newPin;
-    });
-    return newPin;
+  window.pin = {
+    createPin: function (pin) {
+      var newPin = pinTemplate.cloneNode(true);
+      newPin.style.left = pin.location.x - Math.round(randomSettings.PIN_WIDTH / 2) + 'px';
+      newPin.style.top = pin.location.y - randomSettings.PIN_HEIGHT + 'px';
+      var pinImg = newPin.querySelector('img');
+      pinImg.src = pin.author.avatar;
+      pinImg.alt = pin.offer.title;
+      newPin.addEventListener('click', function () {
+        window.card.showCard(pin);
+        togglePinActive();
+        newPin.classList.add(styleClasses.PIN_ACTIVE);
+        activePin = newPin;
+      });
+      return newPin;
+    },
+    deactivatePin: function () {
+      togglePinActive();
+    }
   };
 })();
