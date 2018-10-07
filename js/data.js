@@ -30,23 +30,23 @@
     var x = Math.floor(Math.random() * mapWidth);
     var y = Math.floor((Math.random() * (randomSettings.MAX_Y - randomSettings.MIN_Y)) + randomSettings.MIN_Y);
     var featuresCount = Math.floor(Math.random() * randomSettings.FEATURES.length - 1);
-    var features = window.randomSort(randomSettings.FEATURES).slice(featuresCount);
+    var features = window.utils.randomSort(randomSettings.FEATURES).slice(featuresCount);
     var pin = {
       author: {
         avatar: getAvatar(count)
       },
       offer: {
-        title: window.getRandomValue(randomSettings.TITLES),
+        title: window.utils.getRandomValue(randomSettings.TITLES),
         address: x + ', ' + y,
         price: Math.floor((Math.random() * (randomSettings.PRICE_MAX - randomSettings.PRICE_MIN)) + randomSettings.PRICE_MIN),
-        type: window.getRandomValue(randomSettings.TYPES),
+        type: window.utils.getRandomValue(randomSettings.TYPES),
         rooms: Math.floor((Math.random() * (randomSettings.ROOMS_MAX - 1)) + 1),
         guests: Math.floor((Math.random() * (randomSettings.GUESTS_MAX - 1)) + 1),
-        checkin: window.getRandomValue(randomSettings.CHECKINS),
-        checkout: window.getRandomValue(randomSettings.CHECKOUTS),
+        checkin: window.utils.getRandomValue(randomSettings.CHECKINS),
+        checkout: window.utils.getRandomValue(randomSettings.CHECKOUTS),
         features: features,
         description: '',
-        photos: window.randomSort(randomSettings.PHOTOS)
+        photos: window.utils.randomSort(randomSettings.PHOTOS)
       },
       location: {
         x: x,
@@ -56,12 +56,13 @@
     return pin;
   };
 
-  window.getPinsObjects = function (mapWidth) {
-    var pins = [];
-    for (var i = 1; i <= OFFERS_AMOUNT; i++) {
-      pins.push(generatePin(mapWidth, i));
+  window.data = {
+    getPinsObjects: function (mapWidth) {
+      var pins = [];
+      for (var i = 1; i <= OFFERS_AMOUNT; i++) {
+        pins.push(generatePin(mapWidth, i));
+      }
+      return pins;
     }
-    return pins;
   };
-
 })();
