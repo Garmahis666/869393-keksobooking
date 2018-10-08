@@ -29,7 +29,7 @@
     newCard.querySelector('.popup__description').textContent = pin.offer.description;
     var closedCard = newCard.querySelector('.popup__close');
     closedCard.addEventListener('click', function () {
-      window.pin.deactivatePin();
+      window.pin.deactivate();
       newCard.remove();
     });
     var features = newCard.querySelector('.popup__features');
@@ -58,12 +58,10 @@
     return newPhoto;
   };
 
-  window.card = {
-    showCard: function (pin) {
-      if (activeCard) {
-        activeCard.remove();
-      }
-      createCard(pin);
+  window.showCard = function (pin) {
+    if (activeCard) {
+      activeCard.remove();
     }
+    createCard(pin);
   };
 })();
