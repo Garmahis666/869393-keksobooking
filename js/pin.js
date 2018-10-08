@@ -22,7 +22,7 @@
   };
 
   window.pin = {
-    createPin: function (pin) {
+    create: function (pin) {
       var newPin = pinTemplate.cloneNode(true);
       newPin.style.left = pin.location.x - Math.round(randomSettings.PIN_WIDTH / 2) + 'px';
       newPin.style.top = pin.location.y - randomSettings.PIN_HEIGHT + 'px';
@@ -30,14 +30,14 @@
       pinImg.src = pin.author.avatar;
       pinImg.alt = pin.offer.title;
       newPin.addEventListener('click', function () {
-        window.card.showCard(pin);
+        window.showCard(pin);
         togglePinActive();
         newPin.classList.add(styleClasses.PIN_ACTIVE);
         activePin = newPin;
       });
       return newPin;
     },
-    deactivatePin: function () {
+    deactivate: function () {
       togglePinActive();
     }
   };
