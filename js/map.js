@@ -52,7 +52,7 @@
     evt.preventDefault();
     if (!activeMap) {
       activateMap();
-      window.form.activateForm();
+      window.form.activate();
     }
     document.removeEventListener('mouseup', onMapPinMainMouseUpActivate);
     document.removeEventListener('mousemove', onMapPinMainMouseMove);
@@ -95,7 +95,7 @@
   var createFragmentPins = function (pins) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < pins.length; i++) {
-      var newPin = window.pin.createPin(pins[i]);
+      var newPin = window.pin.create(pins[i]);
       fragment.appendChild(newPin);
     }
     return fragment;
@@ -110,6 +110,6 @@
   };
 
   mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown);
-  window.form.disableForm();
+  window.form.deactivate();
 
 })();
