@@ -63,7 +63,7 @@
   };
 
   window.form = {
-    activateForm: function () {
+    activate: function () {
       enableForms();
       roomNumberChange();
       typeOfHousing.addEventListener('change', setMinPrice);
@@ -71,7 +71,7 @@
       timein.addEventListener('change', onTimeinChange);
       timeout.addEventListener('change', onTimeoutChange);
     },
-    disableForm: function () {
+    deactivate: function () {
       adForm.classList.add(styleClasses.FROM_DISABLE);
       for (var i = 0; i < adFormElements.length; i++) {
         adFormElements[i].setAttribute('disabled', 'disabled');
