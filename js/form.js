@@ -10,6 +10,9 @@
   var roomNumber = document.querySelector('#room_number');
   var typeOfHousing = document.querySelector('#type');
   var costOfHousing = document.querySelector('#price');
+  var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+  //  var successTemplate = document.querySelector('#success').content.querySelector('.success');
+  var main = document.querySelector('main');
 
   var typesOfHousing = {
     flat: {name: 'Квартира', minCost: 1000},
@@ -54,32 +57,54 @@
     capacity.value = roomsCapacity[roomNumber.value][0];
   };
 
-  var enableForms = function () {
+  var onLoad = function () {
+    disableFrom();
+    window.map.deactivate();
+    // var newMessage = successTemplate.cloneNode(true);
+    // main.appendChild(newMessage);
+  };
+
+  var onError = function (message) {
+    var newMessage = errorTemplate.cloneNode(true);
+    newMessage.querySelector('p').innerHTML = message;
+    main.appendChild(newMessage);
+  };
+
+  var enableForm = function () {
     adForm.classList.remove(styleClasses.FROM_DISABLE);
     for (var i = 0; i < adFormElements.length; i++) {
       adFormElements[i].removeAttribute('disabled');
     }
-    address.setAttribute('disabled', 'disabled');
+    address.readOnly = true;
+    roomNumberChange();
+    typeOfHousing.addEventListener('change', setMinPrice);
+    roomNumber.addEventListener('change', onRoomNumberChange);
+    timein.addEventListener('change', onTimeinChange);
+    timeout.addEventListener('change', onTimeoutChange);
+    adForm.addEventListener('submit', function (evt) {
+      window.backend.upload(new FormData(adForm), onLoad, onError);
+      evt.preventDefault();
+    });
+  };
+
+  var disableFrom = function () {
+    adForm.classList.add(styleClasses.FROM_DISABLE);
+    adForm.reset();
+    for (var i = 0; i < adFormElements.length; i++) {
+      adFormElements[i].setAttribute('disabled', 'disabled');
+    }
+    typeOfHousing.removeEventListener('change', setMinPrice);
+    roomNumber.removeEventListener('change', onRoomNumberChange);
+    timein.removeEventListener('change', onTimeinChange);
+    timeout.removeEventListener('change', onTimeoutChange);
   };
 
   window.form = {
     activate: function () {
-      enableForms();
-      roomNumberChange();
-      typeOfHousing.addEventListener('change', setMinPrice);
-      roomNumber.addEventListener('change', onRoomNumberChange);
-      timein.addEventListener('change', onTimeinChange);
-      timeout.addEventListener('change', onTimeoutChange);
+      enableForm();
     },
     deactivate: function () {
-      adForm.classList.add(styleClasses.FROM_DISABLE);
-      for (var i = 0; i < adFormElements.length; i++) {
-        adFormElements[i].setAttribute('disabled', 'disabled');
-      }
-      typeOfHousing.removeEventListener('change', setMinPrice);
-      roomNumber.removeEventListener('change', onRoomNumberChange);
-      timein.removeEventListener('change', onTimeinChange);
-      timeout.removeEventListener('change', onTimeoutChange);
+      disableFrom();
     },
     setAddress: function (addressText) {
       address.value = addressText;
