@@ -58,10 +58,17 @@
     return newPhoto;
   };
 
-  window.showCard = function (pin) {
-    if (activeCard) {
-      activeCard.remove();
+  window.card = {
+    show: function (pin) {
+      if (activeCard) {
+        activeCard.remove();
+      }
+      createCard(pin);
+    },
+    clear: function () {
+      if (activeCard) {
+        activeCard.remove();
+      }
     }
-    createCard(pin);
   };
 })();
