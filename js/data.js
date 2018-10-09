@@ -5,13 +5,13 @@
   var main = document.querySelector('main');
   var pinsDatebase;
 
-  var onError = function (message) {
+  var onLoadPinsError = function (message) {
     var newMessage = errorTemplate.cloneNode(true);
-    newMessage.querySelector('p').innerHTML = message;
+    newMessage.querySelector('p').innerText = message;
     main.appendChild(newMessage);
   };
 
-  var onSuccess = function (data) {
+  var onLoadPins = function (data) {
     pinsDatebase = data;
   };
 
@@ -20,7 +20,7 @@
       return pinsDatebase;
     },
     load: function () {
-      window.backend.load(onSuccess, onError);
+      window.backend.load(onLoadPins, onLoadPinsError);
     }
   };
 })();
