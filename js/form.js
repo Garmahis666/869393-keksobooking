@@ -57,16 +57,16 @@
     capacity.value = roomsCapacity[roomNumber.value][0];
   };
 
-  var onLoad = function () {
+  var onUploadForm = function () {
     disableFrom();
     window.map.deactivate();
     // var newMessage = successTemplate.cloneNode(true);
     // main.appendChild(newMessage);
   };
 
-  var onError = function (message) {
+  var onUploadFormError = function (message) {
     var newMessage = errorTemplate.cloneNode(true);
-    newMessage.querySelector('p').innerHTML = message;
+    newMessage.querySelector('p').innerText = message;
     main.appendChild(newMessage);
   };
 
@@ -82,7 +82,7 @@
     timein.addEventListener('change', onTimeinChange);
     timeout.addEventListener('change', onTimeoutChange);
     adForm.addEventListener('submit', function (evt) {
-      window.backend.upload(new FormData(adForm), onLoad, onError);
+      window.backend.upload(new FormData(adForm), onUploadForm, onUploadFormError);
       evt.preventDefault();
     });
   };
