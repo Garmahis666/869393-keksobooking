@@ -3,7 +3,7 @@
 (function () {
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
   var main = document.querySelector('main');
-  var pinDatebase;
+  var pinsDatebase;
 
   var onError = function (message) {
     var newMessage = errorTemplate.cloneNode(true);
@@ -12,16 +12,12 @@
   };
 
   var onSuccess = function (data) {
-    pinDatebase = data;
+    pinsDatebase = data;
   };
 
   window.data = {
     getPinsObjects: function () {
-      var pins = [];
-      for (var i = 0; i < pinDatebase.length; i++) {
-        pins.push(pinDatebase[i]);
-      }
-      return pins;
+      return pinsDatebase;
     },
     load: function () {
       window.backend.load(onSuccess, onError);
