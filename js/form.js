@@ -14,6 +14,7 @@
   var costOfHousing = document.querySelector('#price');
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
   var successTemplate = document.querySelector('#success').content.querySelector('.success');
+
   var main = document.querySelector('main');
 
   var typesOfHousing = {
