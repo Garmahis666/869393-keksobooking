@@ -41,12 +41,12 @@
         }
         break;
       case 'housing-rooms':
-        if (parseInt(element.value) !== pin['offer']['rooms']) {
+        if (parseInt(element.value, 10) !== pin['offer']['rooms']) {
           return false;
         }
         break;
       case 'housing-guests':
-        if (parseInt(element.value) !== pin['offer']['guests']) {
+        if (parseInt(element.value, 10) !== pin['offer']['guests']) {
           return false;
         }
         break;
@@ -75,7 +75,9 @@
       for (var i = 0; i < elementsSelect.length; i++) {
         var element = elementsSelect[i];
         if (element.value !== 'any') {
-          return checkSelectFilters(element, pin);
+          if (!checkSelectFilters(element, pin)) {
+            return false;
+          }
         }
       }
       return true;
