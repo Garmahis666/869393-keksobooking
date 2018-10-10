@@ -102,13 +102,13 @@
     return fragment;
   };
 
-  var filteredPins = function () {
+  var filterPins = function () {
     var pinsObject = window.data.getPinsObjects().filter(window.filter.doFilter);
     return pinsObject.slice(0, MAX_PINS);
   };
 
   var addPins = function () {
-    var pinsObject = filteredPins();
+    var pinsObject = filterPins();
     var pins = createFragmentPins(pinsObject);
     mapPins.appendChild(pins);
   };
