@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var OK_TIMEOUT = 2000;
+
   var adForm = document.querySelector('.ad-form');
   var adFormElements = adForm.querySelectorAll('fieldset');
   var address = document.querySelector('#address');
@@ -57,14 +59,14 @@
     capacity.value = roomsCapacity[roomNumber.value][0];
   };
 
-  var onUploadForm= function () {
+  var onUploadForm = function () {
     disableFrom();
     window.map.deactivate();
     var newMessage = successTemplate.cloneNode(true);
     main.appendChild(newMessage);
     (window.utils.debounce(function () {
       main.removeChild(newMessage);
-    }, 2000))();
+    }, OK_TIMEOUT))();
   };
 
   var onUploadFormError = function (message) {
