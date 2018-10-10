@@ -102,14 +102,32 @@
   };
 
   var activateMap = function () {
-    var pinsObject = window.data.getPinsObjects(mapPins.offsetWidth);
+    var pinsObject = window.data.getPinsObjects();
     var pins = createFragmentPins(pinsObject);
     mapPins.appendChild(pins);
     eraseTagsClasses();
     activeMap = true;
   };
 
+  var deactivateMap = function () {
+    document.querySelector('.map').classList.add('map--faded');
+    var pins = mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
+    Array.prototype.forEach.call(pins, function (node) {
+      node.parentNode.removeChild(node);
+    });
+    mapPinMain.style.left = startCoords.xStart;
+    mapPinMain.style.top = startCoords.yStart;
+    activeMap = false;
+  };
+
+  window.map = {
+    deactivate: function () {
+      deactivateMap();
+    }
+  };
+
   mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown);
   window.form.deactivate();
-
+  window.form.setAddress(calculateAddress());
+  window.data.load();
 })();
