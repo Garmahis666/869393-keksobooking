@@ -19,6 +19,15 @@
     }
   };
 
+  var inputFiltersToPin = function (arrayInPin, arrayInFilter) {
+    for (var i = 0; i < arrayInFilter.length; i++) {
+      if (!arrayInPin.includes(arrayInFilter[i])) {
+        return false;
+      }
+    }
+    return true;
+  };
+
   var checkSelectFilters = function (element, pin) {
     switch (element.name) {
       case 'housing-type':
@@ -60,7 +69,7 @@
           return element.value;
         });
       }
-      if (featuresFilter.some(ele => !pin['offer']['features'].includes(ele))) {
+      if (!inputFiltersToPin(pin['offer']['features'], featuresFilter)) {
         return false;
       }
       for (var i = 0; i < elementsSelect.length; i++) {
@@ -94,6 +103,15 @@
     }
   };
 
+  var inputFiltersToPin = function (arrayInPin, arrayInFilter) {
+    for (var i = 0; i < arrayInFilter.length; i++) {
+      if (!arrayInPin.includes(arrayInFilter[i])) {
+        return false;
+      }
+    }
+    return true;
+  };
+
   var checkSelectFilters = function (element, pin) {
     switch (element.name) {
       case 'housing-type':
@@ -135,7 +153,7 @@
           return element.value;
         });
       }
-      if (featuresFilter.some(ele => !pin['offer']['features'].includes(ele))) {
+      if (!inputFiltersToPin(pin['offer']['features'], featuresFilter)) {
         return false;
       }
       for (var i = 0; i < elementsSelect.length; i++) {
