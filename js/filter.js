@@ -19,12 +19,13 @@
     }
   };
 
+  var compareValues = function (filter, value) {
+    return value.toString() === filter.toString();
+  };
+
   var rulesOfFilter = {
     'housing-type': function (element, pin) {
-      if (element.value !== pin['offer']['type']) {
-        return false;
-      }
-      return true;
+      return compareValues(element.value, pin['offer']['type']);
     },
     'housing-price': function (element, pin) {
       if (pin['offer']['price'] < valueToPrice[element.value].min || pin['offer']['price'] > valueToPrice[element.value].max) {
@@ -33,16 +34,10 @@
       return true;
     },
     'housing-rooms': function (element, pin) {
-      if (parseInt(element.value, 10) !== pin['offer']['rooms']) {
-        return false;
-      }
-      return true;
+      return compareValues(element.value, pin['offer']['rooms']);
     },
     'housing-guests': function (element, pin) {
-      if (parseInt(element.value, 10) !== pin['offer']['guests']) {
-        return false;
-      }
-      return true;
+      return compareValues(element.value, pin['offer']['guests']);
     }
   };
 
