@@ -19,37 +19,38 @@
     }
   };
 
+  var rulesOfFilter = {
+    'housing-type': function (element, pin) {
+      if (element.value !== pin['offer']['type']) {
+        return false;
+      }
+      return true;
+    },
+    'housing-price': function (element, pin) {
+      if (pin['offer']['price'] < valueToPrice[element.value].min || pin['offer']['price'] > valueToPrice[element.value].max) {
+        return false;
+      }
+      return true;
+    },
+    'housing-rooms': function (element, pin) {
+      if (parseInt(element.value, 10) !== pin['offer']['rooms']) {
+        return false;
+      }
+      return true;
+    },
+    'housing-guests': function (element, pin) {
+      if (parseInt(element.value, 10) !== pin['offer']['guests']) {
+        return false;
+      }
+      return true;
+    }
+  };
+
   var inputFiltersToPin = function (arrayInPin, arrayInFilter) {
     for (var i = 0; i < arrayInFilter.length; i++) {
       if (!arrayInPin.includes(arrayInFilter[i])) {
         return false;
       }
-    }
-    return true;
-  };
-
-  var checkSelectFilters = function (element, pin) {
-    switch (element.name) {
-      case 'housing-type':
-        if (element.value !== pin['offer']['type']) {
-          return false;
-        }
-        break;
-      case 'housing-price':
-        if (pin['offer']['price'] < valueToPrice[element.value].min || pin['offer']['price'] > valueToPrice[element.value].max) {
-          return false;
-        }
-        break;
-      case 'housing-rooms':
-        if (parseInt(element.value, 10) !== pin['offer']['rooms']) {
-          return false;
-        }
-        break;
-      case 'housing-guests':
-        if (parseInt(element.value, 10) !== pin['offer']['guests']) {
-          return false;
-        }
-        break;
     }
     return true;
   };
@@ -75,7 +76,7 @@
       for (var i = 0; i < elementsSelect.length; i++) {
         var element = elementsSelect[i];
         if (element.value !== 'any') {
-          if (!checkSelectFilters(element, pin)) {
+          if (!rulesOfFilter[element.name](element, pin)) {
             return false;
           }
         }
