@@ -28,10 +28,7 @@
       return compareValues(element.value, pin['offer']['type']);
     },
     'housing-price': function (element, pin) {
-      if (pin['offer']['price'] < valueToPrice[element.value].min || pin['offer']['price'] > valueToPrice[element.value].max) {
-        return false;
-      }
-      return true;
+      return (pin['offer']['price'] >= valueToPrice[element.value].min && pin['offer']['price'] < valueToPrice[element.value].max);
     },
     'housing-rooms': function (element, pin) {
       return compareValues(element.value, pin['offer']['rooms']);
