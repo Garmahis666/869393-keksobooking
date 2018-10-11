@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var FILTER_TIMEOUT = 500;
+  var MAX_PINS = 5;
   var pinSettings = {
     MAIN_PIN_WIDTH: 65,
     MAIN_PIN_HEIGHT: 87
@@ -14,8 +16,6 @@
   };
 
   var activeMap = false;
-  var FILTER_TIMEOUT = 500;
-  var MAX_PINS = 5;
   var mapPins = document.querySelector('.map__pins');
   var mapPinMain = document.querySelector('.map__pin--main');
 
@@ -94,20 +94,20 @@
 
   var createFragmentPins = function (pins) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < pins.length; i++) {
-      var newPin = window.pin.create(pins[i]);
+    pins.forEach(function (pin) {
+      var newPin = window.pin.create(pin);
       fragment.appendChild(newPin);
-    }
+    });
     return fragment;
   };
 
-  var filteredPins = function () {
+  var filterPins = function () {
     var pinsObject = window.data.getPinsObjects().filter(window.filter.doFilter);
     return pinsObject.slice(0, MAX_PINS);
   };
 
   var addPins = function () {
-    var pinsObject = filteredPins();
+    var pinsObject = filterPins();
     var pins = createFragmentPins(pinsObject);
     mapPins.appendChild(pins);
   };
