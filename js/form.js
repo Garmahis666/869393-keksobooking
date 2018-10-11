@@ -1,7 +1,8 @@
 'use strict';
 
 (function () {
-  var OK_TIMEOUT = 2000;
+  var OK_TIMEOUT = 5000;
+  var ESC_KEYCODE = 'Escape';
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
   var EMPTY_AVATAR_IMAGE = 'img/muffin-grey.svg';
 
@@ -74,6 +75,14 @@
     (window.utils.debounce(function () {
       main.removeChild(newMessage);
     }, OK_TIMEOUT))();
+    newMessage.addEventListener('click', function () {
+      main.removeChild(newMessage);
+    });
+    document.addEventListener('keydown', function (evt) {
+      if (evt.key === ESC_KEYCODE) {
+        main.removeChild(newMessage);
+      }
+    });
   };
 
   var onUploadFormError = function (message) {
@@ -83,6 +92,14 @@
     button.addEventListener('click', function () {
       main.removeChild(newMessage);
       window.backend.upload(new FormData(adForm), onUploadForm, onUploadFormError);
+    });
+    newMessage.addEventListener('click', function () {
+      main.removeChild(newMessage);
+    });
+    document.addEventListener('keydown', function (evt) {
+      if (evt.key === ESC_KEYCODE) {
+        main.removeChild(newMessage);
+      }
     });
     main.appendChild(newMessage);
   };
@@ -94,7 +111,7 @@
     }
     address.readOnly = true;
     roomNumberChange();
-    clearFormButton.addEventListener('click', clearAllPhoto);
+    clearFormButton.addEventListener('click', onClearForm);
     typeOfHousing.addEventListener('change', setMinPrice);
     roomNumber.addEventListener('change', onRoomNumberChange);
     timein.addEventListener('change', onTimeinChange);
@@ -110,6 +127,11 @@
   var clearAllPhoto = function () {
     clearAvatar();
     clearPhotos();
+  };
+
+  var onClearForm = function () {
+    disableFrom();
+    window.map.deactivate();
   };
 
   var createPhotoContainer = function () {
@@ -130,7 +152,7 @@
     timein.removeEventListener('change', onTimeinChange);
     timeout.removeEventListener('change', onTimeoutChange);
     avatarChooser.removeEventListener('change', onChangeAvatar);
-    clearFormButton.removeEventListener('click', clearAllPhoto);
+    clearFormButton.removeEventListener('click', onClearForm);
     fotoChooser.removeEventListener('change', onAddPhoto);
   };
 
@@ -173,17 +195,21 @@
   };
 
   var onAddPhoto = function () {
-    var file = fotoChooser.files[0];
-    var fileName = file.name.toLowerCase();
-    var matches = FILE_TYPES.some(function (it) {
-      return fileName.endsWith(it);
-    });
-    if (matches) {
-      var reader = new FileReader();
-      reader.addEventListener('load', function () {
-        fotoBox.appendChild(createPhoto(reader.result));
+    for (var i = 0; i < fotoChooser.files.length; i++) {
+      var file = fotoChooser.files[i];
+      var fileName = file.name.toLowerCase();
+      var matches = FILE_TYPES.some(function (it) {
+        return fileName.endsWith(it);
       });
-      reader.readAsDataURL(file);
+      if (matches) {
+        var reader = new FileReader();
+        reader.onload = (function () {
+          return function (e) {
+            fotoBox.appendChild(createPhoto(e.target.result));
+          };
+        })(file);
+        reader.readAsDataURL(file);
+      }
     }
   };
 
