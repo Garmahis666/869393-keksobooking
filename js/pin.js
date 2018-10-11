@@ -1,9 +1,6 @@
 'use strict';
 
 (function () {
-  var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-
-  var activePin = null;
   var styleClasses = {
     PIN_ACTIVE: 'map__pin--active',
     FROM_DISABLE: 'ad-form--disabled'
@@ -13,6 +10,10 @@
     PIN_WIDTH: 50,
     PIN_HEIGHT: 70
   };
+
+  var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+
+  var activePin = null;
 
   var togglePinActive = function () {
     if (activePin) {

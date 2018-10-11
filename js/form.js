@@ -6,6 +6,11 @@
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
   var EMPTY_AVATAR_IMAGE = 'img/muffin-grey.svg';
 
+  var styleClasses = {
+    PIN_ACTIVE: 'map__pin--active',
+    FROM_DISABLE: 'ad-form--disabled'
+  };
+
   var adForm = document.querySelector('.ad-form');
   var adFormElements = adForm.querySelectorAll('fieldset');
   var address = document.querySelector('#address');
@@ -36,11 +41,6 @@
     '2': ['1', '2'],
     '3': ['1', '2', '3'],
     '100': ['0']
-  };
-
-  var styleClasses = {
-    PIN_ACTIVE: 'map__pin--active',
-    FROM_DISABLE: 'ad-form--disabled'
   };
 
   var onTimeinChange = function () {
@@ -195,8 +195,8 @@
   };
 
   var onAddPhoto = function () {
-    for (var i = 0; i < fotoChooser.files.length; i++) {
-      var file = fotoChooser.files[i];
+    var filesArray = Array.prototype.slice.call(fotoChooser.files);
+    filesArray.forEach(function (file) {
       var fileName = file.name.toLowerCase();
       var matches = FILE_TYPES.some(function (it) {
         return fileName.endsWith(it);
@@ -210,7 +210,7 @@
         })(file);
         reader.readAsDataURL(file);
       }
-    }
+    });
   };
 
   window.form = {

@@ -2,6 +2,11 @@
 
 (function () {
   var ESC_KEYCODE = 'Escape';
+  var randomSettings = {
+    PICTURE_WIDTH: 45,
+    PICTURE_HEIGHT: 40
+  };
+
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
   var activeCard = document.querySelector('.map__card');
   var filter = document.querySelector('.map__filters-container');
@@ -11,11 +16,6 @@
     bungalo: {name: 'Бунгало', minCost: 0},
     house: {name: 'Дом', minCost: 5000},
     palace: {name: 'Дворец', minCost: 10000}
-  };
-
-  var randomSettings = {
-    PICTURE_WIDTH: 45,
-    PICTURE_HEIGHT: 40
   };
 
   var createCard = function (pin) {
