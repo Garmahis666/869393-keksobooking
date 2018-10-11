@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var OK_TIMEOUT = 2000;
+
   var adForm = document.querySelector('.ad-form');
   var adFormElements = adForm.querySelectorAll('fieldset');
   var address = document.querySelector('#address');
@@ -11,7 +13,8 @@
   var typeOfHousing = document.querySelector('#type');
   var costOfHousing = document.querySelector('#price');
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
-  //  var successTemplate = document.querySelector('#success').content.querySelector('.success');
+  var successTemplate = document.querySelector('#success').content.querySelector('.success');
+
   var main = document.querySelector('main');
 
   var typesOfHousing = {
@@ -60,13 +63,21 @@
   var onUploadForm = function () {
     disableFrom();
     window.map.deactivate();
-    // var newMessage = successTemplate.cloneNode(true);
-    // main.appendChild(newMessage);
+    var newMessage = successTemplate.cloneNode(true);
+    main.appendChild(newMessage);
+    (window.utils.debounce(function () {
+      main.removeChild(newMessage);
+    }, OK_TIMEOUT))();
   };
 
   var onUploadFormError = function (message) {
     var newMessage = errorTemplate.cloneNode(true);
     newMessage.querySelector('p').innerText = message;
+    var button = newMessage.querySelector('.error__button');
+    button.addEventListener('click', function () {
+      main.removeChild(newMessage);
+      window.backend.upload(new FormData(adForm), onUploadForm, onUploadFormError);
+    });
     main.appendChild(newMessage);
   };
 

@@ -2,7 +2,7 @@
 
 (function () {
 
-  var randomSettings = {
+  var pinSettings = {
     MAIN_PIN_WIDTH: 65,
     MAIN_PIN_HEIGHT: 87
   };
@@ -15,20 +15,21 @@
   };
 
   var activeMap = false;
-
+  var FILTER_TIMEOUT = 500;
+  var MAX_PINS = 5;
   var mapPins = document.querySelector('.map__pins');
   var mapPinMain = document.querySelector('.map__pin--main');
 
   var rangeOfCoords = {
     minX: 0,
-    maxX: mapPins.offsetWidth - randomSettings.MAIN_PIN_WIDTH,
-    minY: 130 - randomSettings.MAIN_PIN_HEIGHT,
-    maxY: 630 - randomSettings.MAIN_PIN_HEIGHT
+    maxX: mapPins.offsetWidth - pinSettings.MAIN_PIN_WIDTH,
+    minY: 130 - pinSettings.MAIN_PIN_HEIGHT,
+    maxY: 630 - pinSettings.MAIN_PIN_HEIGHT
   };
 
   var calculateAddress = function () {
-    var x = parseInt(mapPinMain.style.left.split('px')[0], 0) + Math.round(randomSettings.MAIN_PIN_WIDTH / 2);
-    var y = parseInt(mapPinMain.style.top.split('px')[0], 0) + randomSettings.MAIN_PIN_HEIGHT;
+    var x = parseInt(mapPinMain.style.left.split('px')[0], 0) + Math.round(pinSettings.MAIN_PIN_WIDTH / 2);
+    var y = parseInt(mapPinMain.style.top.split('px')[0], 0) + pinSettings.MAIN_PIN_HEIGHT;
     return x + ', ' + y;
   };
 
@@ -101,20 +102,35 @@
     return fragment;
   };
 
-  var activateMap = function () {
-    var pinsObject = window.data.getPinsObjects();
+  var filterPins = function () {
+    var pinsObject = window.data.getPinsObjects().filter(window.filter.doFilter);
+    return pinsObject.slice(0, MAX_PINS);
+  };
+
+  var addPins = function () {
+    var pinsObject = filterPins();
     var pins = createFragmentPins(pinsObject);
     mapPins.appendChild(pins);
+  };
+
+  var activateMap = function () {
+    addPins();
     eraseTagsClasses();
+    window.filter.addAction();
     activeMap = true;
   };
 
-  var deactivateMap = function () {
-    document.querySelector('.map').classList.add('map--faded');
+  var clearPins = function () {
     var pins = mapPins.querySelectorAll('.map__pin:not(.map__pin--main)');
     Array.prototype.forEach.call(pins, function (node) {
       node.parentNode.removeChild(node);
     });
+  };
+
+  var deactivateMap = function () {
+    document.querySelector('.map').classList.add('map--faded');
+    clearPins();
+    window.card.clear();
     mapPinMain.style.left = startCoords.xStart;
     mapPinMain.style.top = startCoords.yStart;
     activeMap = false;
@@ -123,7 +139,12 @@
   window.map = {
     deactivate: function () {
       deactivateMap();
-    }
+    },
+    refreshPins: window.utils.debounce(function () {
+      clearPins();
+      window.card.clear();
+      addPins();
+    }, FILTER_TIMEOUT)
   };
 
   mapPinMain.addEventListener('mousedown', onMapPinMainMouseDown);

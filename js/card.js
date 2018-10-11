@@ -58,10 +58,19 @@
     return newPhoto;
   };
 
-  window.showCard = function (pin) {
+  var clearActiveCard = function () {
     if (activeCard) {
       activeCard.remove();
     }
-    createCard(pin);
+  };
+
+  window.card = {
+    show: function (pin) {
+      clearActiveCard();
+      createCard(pin);
+    },
+    clear: function () {
+      clearActiveCard();
+    }
   };
 })();
