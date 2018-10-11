@@ -30,7 +30,7 @@
       pinImg.src = pin.author.avatar;
       pinImg.alt = pin.offer.title;
       newPin.addEventListener('click', function () {
-        window.showCard(pin);
+        window.card.show(pin);
         togglePinActive();
         newPin.classList.add(styleClasses.PIN_ACTIVE);
         activePin = newPin;

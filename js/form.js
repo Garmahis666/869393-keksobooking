@@ -18,7 +18,6 @@
   var main = document.querySelector('main');
   var avatarChooser = document.querySelector('.ad-form__field input[type=file]');
   var avatar = document.querySelector('.ad-form-header__preview img');
-  var emptyAvatarImage = 'img/muffin-grey.svg';
   var clearFormButton = document.querySelector('.ad-form__reset');
   var fotoChooser = document.querySelector('.ad-form__upload input[type=file]');
   var fotoBox = document.querySelector('.ad-form__photo-container');
