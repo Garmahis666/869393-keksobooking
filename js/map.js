@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-
   var pinSettings = {
     MAIN_PIN_WIDTH: 65,
     MAIN_PIN_HEIGHT: 87
@@ -102,13 +101,13 @@
     return fragment;
   };
 
-  var filterPins = function () {
+  var filteredPins = function () {
     var pinsObject = window.data.getPinsObjects().filter(window.filter.doFilter);
     return pinsObject.slice(0, MAX_PINS);
   };
 
   var addPins = function () {
-    var pinsObject = filterPins();
+    var pinsObject = filteredPins();
     var pins = createFragmentPins(pinsObject);
     mapPins.appendChild(pins);
   };

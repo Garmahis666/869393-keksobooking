@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var ESC_KEYCODE = 'Escape';
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
   var activeCard = document.querySelector('.map__card');
   var filter = document.querySelector('.map__filters-container');
@@ -28,10 +29,8 @@
     newCard.querySelector('.popup__text--time').textContent = 'Заезд после ' + pin.offer.checkin + ', выезд до ' + pin.offer.checkout;
     newCard.querySelector('.popup__description').textContent = pin.offer.description;
     var closedCard = newCard.querySelector('.popup__close');
-    closedCard.addEventListener('click', function () {
-      window.pin.deactivate();
-      newCard.remove();
-    });
+    closedCard.addEventListener('click', clearActiveCard);
+    document.addEventListener('keydown', onDocumentEscPress);
     var features = newCard.querySelector('.popup__features');
     var featureChild = features.querySelectorAll('.popup__feature');
     for (i = 0; i < featureChild.length; i++) {
@@ -61,6 +60,14 @@
   var clearActiveCard = function () {
     if (activeCard) {
       activeCard.remove();
+      window.pin.deactivate();
+      document.removeEventListener('keydown', onDocumentEscPress);
+    }
+  };
+
+  var onDocumentEscPress = function (evt) {
+    if (evt.key === ESC_KEYCODE) {
+      clearActiveCard();
     }
   };
 
