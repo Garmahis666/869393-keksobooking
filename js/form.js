@@ -3,6 +3,7 @@
 (function () {
   var OK_TIMEOUT = 2000;
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+  var EMPTY_AVATAR_IMAGE = 'img/muffin-grey.svg';
 
   var adForm = document.querySelector('.ad-form');
   var adFormElements = adForm.querySelectorAll('fieldset');
@@ -149,7 +150,7 @@
   };
 
   var clearAvatar = function () {
-    avatar.src = emptyAvatarImage;
+    avatar.src = EMPTY_AVATAR_IMAGE;
   };
 
   var clearPhotos = function () {
