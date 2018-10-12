@@ -51,10 +51,10 @@
     addAction: function () {
       var elements = filters.querySelectorAll('select,input');
       elements.forEach(function (element) {
-        element.addEventListener('change', window.map.refreshPins);
+        element.addEventListener('change', window.map.onRefreshPins);
       });
     },
-    doFilter: function (pin) {
+    execute: function (pin) {
       var elements = filters.querySelectorAll('input:checked');
       var featuresFilter = [];
       if (elements.length > 0) {
