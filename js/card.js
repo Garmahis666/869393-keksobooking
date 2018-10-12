@@ -29,7 +29,7 @@
     newCard.querySelector('.popup__text--time').textContent = 'Заезд после ' + pin.offer.checkin + ', выезд до ' + pin.offer.checkout;
     newCard.querySelector('.popup__description').textContent = pin.offer.description;
     var closedCard = newCard.querySelector('.popup__close');
-    closedCard.addEventListener('click', clearActiveCard);
+    closedCard.addEventListener('click', onClearActiveCard);
     document.addEventListener('keydown', onDocumentEscPress);
     var features = newCard.querySelector('.popup__features');
     var featureChild = features.querySelectorAll('.popup__feature');
@@ -55,6 +55,10 @@
     newPhoto.height = randomSettings.PICTURE_HEIGHT;
     newPhoto.alt = 'Фотография жилья';
     return newPhoto;
+  };
+
+  var onClearActiveCard = function () {
+    clearActiveCard();
   };
 
   var clearActiveCard = function () {
