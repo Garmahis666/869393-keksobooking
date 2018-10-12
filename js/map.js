@@ -102,7 +102,7 @@
   };
 
   var filterPins = function () {
-    var pinsObject = window.data.getPinsObjects().filter(window.filter.doFilter);
+    var pinsObject = window.data.getPinsObjects().filter(window.filter.execute);
     return pinsObject.slice(0, MAX_PINS);
   };
 
@@ -139,7 +139,7 @@
     deactivate: function () {
       deactivateMap();
     },
-    refreshPins: window.utils.debounce(function () {
+    onRefreshPins: window.utils.debounce(function () {
       clearPins();
       window.card.clear();
       addPins();
