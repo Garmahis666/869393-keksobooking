@@ -55,7 +55,7 @@
     roomNumberChange();
   };
 
-  var setMinPrice = function () {
+  var onSetMinPrice = function () {
     costOfHousing.min = typesOfHousing[typeOfHousing.value].minCost;
   };
 
@@ -112,7 +112,7 @@
     address.readOnly = true;
     roomNumberChange();
     clearFormButton.addEventListener('click', onClearForm);
-    typeOfHousing.addEventListener('change', setMinPrice);
+    typeOfHousing.addEventListener('change', onSetMinPrice);
     roomNumber.addEventListener('change', onRoomNumberChange);
     timein.addEventListener('change', onTimeinChange);
     timeout.addEventListener('change', onTimeoutChange);
@@ -147,7 +147,7 @@
       adFormElements[i].setAttribute('disabled', 'disabled');
     }
     clearAllPhoto();
-    typeOfHousing.removeEventListener('change', setMinPrice);
+    typeOfHousing.removeEventListener('change', onSetMinPrice);
     roomNumber.removeEventListener('change', onRoomNumberChange);
     timein.removeEventListener('change', onTimeinChange);
     timeout.removeEventListener('change', onTimeoutChange);
